@@ -1,0 +1,94 @@
+*
+  margin: 0
+  padding: 0
+  font-family: sans-serif
+
+.wrapper
+  width: 960px
+  margin: auto
+
+.button-group
+  padding-left: 150px
+
+button
+  box-shadow: 0 0 1px 1px
+  height: 35px
+  width: 200px
+  border: none
+  border-radius: 2px
+  background: #fff
+  margin: 5px
+  cursor: pointer
+  &:disabled
+    cursor: not-allowed
+
+.release-button:enabled
+  background: red
+  font-weight: bold
+  color: #fff
+
+.fa-plus
+  color: lightgreen
+
+.line
+  margin: 10px 0
+  height: 50px
+  box-shadow: inset 0 0 4px 1px
+  span
+    display: inline-block
+    height: 20px
+    width: 150px
+    padding: 15px
+    text-align: right
+
+.time-table
+  position: relative
+  margin-top: 50px
+
+.time-line
+  position: absolute
+  height: 40px
+  width: 780px
+  top: -40px
+  left: 180px
+
+.rail
+  position: absolute
+  height: 170px
+  top: 0
+  left: 179px
+  width: 780px
+  border-left: solid 1px #333
+
+.order
+  position: absolute
+  height: 50px
+  background: mediumslateblue
+
+.hour
+  display: inline-block
+  bottom: 0
+  height: 20px
+  position: absolute
+
+.tomorrow
+  display: inline-block
+  position: absolute
+  height: 20px
+  bottom: 20px
+
+#modal-adding
+  display: none
+  background: #fff
+  padding: 20px
+  margin: auto
+  border-radius: 10px
+  box-shadow: 0 0 10px 1px
+  position: absolute
+
+.modal-wrapper
+  z-index: 100
+  position: absolute
+  top: 0
+  left: 0
+  background: rgba(0, 0, 0, 0.2)

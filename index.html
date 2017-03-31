@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Тестовая задача № 1</title>
+    <link rel="stylesheet" href="css/libs.min.css">
+    <link rel="stylesheet" href="css/main.css">
+    <script src="js/libs.min.js"></script>
+    <script src="js/main.js"></script>
+</head>
+<body>
+<div class="wrapper">
+    <div class="button-group">
+        <button class="add-button" type="button"><i class="fa fa-plus"></i> Добавить наряд <i
+                class="fa fa-caret-down"></i></button>
+        <button class="release-button" disabled>Расписание опубликовано</button>
+    </div>
+
+    <div class="time-table">
+        <div class="time-line"></div>
+        <div class="line-1 line"><span>Не назначено</span></div>
+        <div class="line-2 line"><span><i class="fa fa-user"></i> Иванов И.</span></div>
+        <div class="line-3 line"><span><i class="fa fa-user"></i> Петров В.</span></div>
+        <div class="rail"></div>
+    </div>
+</div>
+
+<div id="modal-adding">
+    <form>
+        <label>Выберите Дату <select name="date" id="date">
+            <option value="today">Сегодня</option>
+            <option value="tomorrow">Завтра</option>
+        </select></label>
+        <label>Выберите Час <select name="hour" id="hour">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+            <option value="13">13</option>
+            <option value="14">14</option>
+            <option value="15">15</option>
+            <option value="16">16</option>
+            <option value="17">17</option>
+            <option value="18">18</option>
+            <option value="19">19</option>
+            <option value="20">20</option>
+            <option value="21">21</option>
+            <option value="22">22</option>
+            <option value="23">23</option>
+        </select>
+
+        </label><br><br>
+        <label>Выберите продолжительность в (в часах) <select name="duration" id="duration">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+        </select></label><br><br>
+        <button type="button" id="submit-adding">Подтвердить</button>
+    </form>
+</div>
+
+</body>
+</html>
