@@ -3,7 +3,22 @@
  */
 const widthInMs = 780 / (24 * 60 * 60 * 1000),
     widthInHours = 780 / 24,
-    now = new Date();
+    now = new Date(),
+    namePerformer = ["","Иванов И.","Петров В."],
+    month = [
+        "Январь",
+        "Февраль",
+        "Март",
+        "Апрель",
+        "Май",
+        "Июнь",
+        "Июль",
+        "Август",
+        "Сентябрь",
+        "Октябрь",
+        "Ноябрь",
+        "Февраль"
+    ];
 class Order {
     constructor(start, duration, performer) {
         this.start = start;
@@ -29,13 +44,15 @@ $(document).ready(()=> {
         afterHour = new Date(now.getTime() + (60 * 60 * 1000)),
         nextHour = new Date(afterHour.getFullYear(), afterHour.getMonth(), afterHour.getDate(), afterHour.getHours()),
         tomorrowStr = "",
-        $addButton = $(".add-button"),
+        $addButton = $(".add-button").removeAttr("disabled"),
         $modalAdd = $("#modal-adding"),
         $wrapper = $("<div>").addClass("modal-wrapper").css({
             width: $(window).width(),
             height: $(window).height()
         }).appendTo("body").hide(),
-        $releaseButton =$(".release-button"),
+        $releaseButton = $(".release-button").attr("disabled", "disabled").html("Расписание Опубликовано"),
+        orderPerformer,
+        orderStartToConfirm,
         tomorrowLeft = (new Date(tomorrow.getFullYear(), tomorrow.getMonth(), tomorrow.getDate()) - now.getTime()) * widthInMs;
     $modalAdd.appendTo($wrapper);
     for (let hours = 0; hours < 23; hours += 3) {
@@ -51,10 +68,10 @@ $(document).ready(()=> {
         tomorrowStr = `${tomorrow.getDate()}`
     }
     if (tomorrow.getMonth() < 10) {
-        tomorrowStr += `.0${tomorrow.getMonth()}`
+        tomorrowStr += `.0${tomorrow.getMonth()+1}`
     }
     else {
-        tomorrowStr += `.${tomorrow.getMonth()}`
+        tomorrowStr += `.${tomorrow.getMonth()+1}`
     }
     tomorrowStr += `.${tomorrow.getFullYear()}`;
     $("<span>").addClass("tomorrow").css("left", tomorrowLeft).html(tomorrowStr)
@@ -66,11 +83,8 @@ $(document).ready(()=> {
             "display": "inline-block"
         });
         $wrapper.show();
-
         top = ($wrapper.height() / 2 - $modalAdd.height() / 2);
         left = ($wrapper.width() / 2 - $modalAdd.width() / 2);
-
-
         $modalAdd.css({
             top: parseInt(top),
             left: parseInt(left)
@@ -81,7 +95,7 @@ $(document).ready(()=> {
                 "day": "",
                 "hour": "",
                 "month": ""
-            };
+            }, $orderDrag;
             orderHour = $("#hour").val();
             orderDuration = $("#duration").val();
             if ($("#date").val() == "today") {
@@ -93,19 +107,60 @@ $(document).ready(()=> {
                 alert("Вы выбрали время раньше текущего.");
             } else {
                 ordersCount++;
-                console.log("trigger");
                 orderStart.month = orderDate.getMonth();
                 orderStart.day = orderDate.getDate();
                 orderStart.hour = orderHour;
+                orderStartToConfirm = orderDate;
+                orderPerformer = 0;
                 orders.push(new Order(orderStart, orderDuration, 0));
-
-                console.log(orders, ordersCount);
                 $wrapper.hide();
                 $("<div>").orderPosition(orders[ordersCount]);
                 $(this).off("click");
-                $addButton.attr("disabled","disabled");
-                $releaseButton.removeAttr("disabled");
+                $addButton.attr("disabled", "disabled");
+                $releaseButton.removeAttr("disabled").html("Опубликовать Расписание");
+                $orderDrag = $(".draggable");
+                $orderDrag.mousedown(function (event) {
+                    $("body").css("user-select", "none");
+                    let xInElement = event.pageX - $orderDrag.offset().left,
+                        yInElement = event.pageY - $orderDrag.offset().top,
+                        $parent = $(this).parent();
+                    $(window).mousemove((event1) => {
+                        let left = event1.pageX - xInElement - $parent.offset().left, top = Math.floor(((event1.pageY - yInElement - $parent.offset().top + 30) / 60));
+                        if (left < 0) left = 0;
+                        if (left + $orderDrag.outerWidth() > $parent.width()) left = $parent.width() - $orderDrag.outerWidth();
+                        if (top < 0) top = 0;
+                        if (top > 2) top = 2;
+                        $orderDrag.css({
+                            "left": left,
+                            "top": top * 60
+                        });
+                        orderPerformer = top;
+                        orderStartToConfirm = new Date(now.getTime() + left / widthInMs);
+                    });
+                    $(window).mouseup(() => {
+                        $("body").css("user-select", "text");
+                        $(window).off("mousemove mouseup");
+                        orders[ordersCount].start.month = orderStartToConfirm.getMonth();
+                        orders[ordersCount].start.day = orderStartToConfirm.getDate();
+                        orders[ordersCount].start.hour = orderStartToConfirm.getHours();
+                        orders[ordersCount].start.performer = orderPerformer;
+                    });
+                });
             }
         });
+    });
+    $releaseButton.click(function () {        
+        if (!this.hasAttribute("disabled")) {
+            if (orderPerformer == 0) {
+                alert("Пожалуйста выберите исполнителя.");
+            } else {
+                alert(`Текущий Исполнитель: ${namePerformer[orderPerformer]}
+Дата начала: ${month[orders[ordersCount].start.month]}, ${orders[ordersCount].start.day} число, в ${orders[ordersCount].start.hour}:00
+Продолжительность (Часов): ${orders[ordersCount].duration}.`);
+                $(".draggable").removeClass("draggable").addClass("confirmed").off("mousedown");
+                $(this).attr("disabled","disabled");
+                $addButton.removeAttr("disabled")
+            }
+        }
     });
 });

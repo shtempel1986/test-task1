@@ -67,6 +67,11 @@ button {
   position: absolute;
   height: 50px;
   background: mediumslateblue; }
+  .order.confirmed {
+    background: red; }
+
+.draggable {
+  cursor: pointer; }
 
 .hour {
   display: inline-block;
